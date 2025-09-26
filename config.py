@@ -2,8 +2,9 @@
 import pygame
 
 # --- 화면 및 UI 설정 ---
-SCREEN_WIDTH = 1200
+SCREEN_WIDTH = 1800
 SCREEN_HEIGHT = 800
+PANEL_GAP = 20
 BACKGROUND_COLOR = (250, 248, 239)
 FPS = 60
 

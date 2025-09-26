@@ -5,6 +5,7 @@ import config
 from game.game_logic import Game2048
 from ai.expectimax_ai import ExpectimaxAI
 from ai.mcts_ai import MCTSAI
+from ai.hybrid_mcts_ai import HybridMCTSAI
 from ui.renderer import GameRenderer, BoardRenderer, Tile
 import threading
 import queue
@@ -28,7 +29,8 @@ def main():
     main_renderer = GameRenderer(screen)
     ais = {
         "Expectimax": ExpectimaxAI(depth=config.EXPECTIMAX_DEPTH),
-        "MCTS": MCTSAI(iterations=config.MCTS_ITERATIONS)
+        "MCTS": MCTSAI(iterations=config.MCTS_ITERATIONS),
+        "Hybrid MCTS": HybridMCTSAI(iterations=config.MCTS_ITERATIONS)
     }
 
     # 각 AI마다 독립적인 게임, 보드 렌더러, 큐, 스레드, 상태 저장

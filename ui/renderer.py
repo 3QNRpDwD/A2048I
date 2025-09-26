@@ -173,13 +173,19 @@ class GameRenderer:
     def draw_main_ui(self, games, analyses, turn_counts, board_renderers, thinking_ai=None):
         self.screen.fill(config.BACKGROUND_COLOR)
         ai_names = list(games.keys())
-        positions = [(50, 100), (config.SCREEN_WIDTH / 2 + 50, 100)]
+        num_ais = len(ai_names)
+        
+        panel_width = config.BOARD_SIZE * config.TILE_SIZE + (config.BOARD_SIZE + 1) * config.TILE_PADDING
+        total_width = num_ais * panel_width + (num_ais - 1) * config.PANEL_GAP
+        start_x = (self.screen.get_width() - total_width) // 2
 
         for i, ai_name in enumerate(ai_names):
             game = games[ai_name]
             analysis = analyses[ai_name]
             board_renderer = board_renderers[ai_name]
-            x, y = positions[i]
+            
+            x = start_x + i * (panel_width + config.PANEL_GAP)
+            y = 100 # Constant y position
 
             title = config.UI_FONT.render(f"{i+1}. {ai_name}", True, (0,0,0))
             self.screen.blit(title, (x, y))
