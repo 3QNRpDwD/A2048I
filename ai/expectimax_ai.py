@@ -1,10 +1,12 @@
 from .base_ai import BaseAI
-from . import heuristic
+from .heuristic import evaluate, DEFAULT_WEIGHTS
 import numpy as np
 
 class ExpectimaxAI(BaseAI):
     def __init__(self, depth=3):
         self.depth = depth
+        self.heuristic_func = evaluate
+        self.heuristic_weights = DEFAULT_WEIGHTS
 
     def get_move(self, game):
         best_move, best_score = -1, -np.inf
@@ -35,7 +37,7 @@ class ExpectimaxAI(BaseAI):
 
     def expectimax(self, game, depth, is_max_turn):
         if depth == 0 or game.game_over:
-            score = heuristic.evaluate(game.board)
+            score = self.heuristic_func(game.board, self.heuristic_weights)
             return score, {'name': f'Leaf: {score:.1f}', 'board': game.board, 'children': []}
 
         if is_max_turn: # AI의 턴 (Max 노드)
@@ -56,7 +58,7 @@ class ExpectimaxAI(BaseAI):
             empty_tiles = game.get_empty_tiles()
             node = {'name': 'Chance', 'board': game.board, 'children': []}
             if not empty_tiles:
-                return heuristic.evaluate(game.board), node
+                return self.heuristic_func(game.board, self.heuristic_weights), node
 
             num_empty = len(empty_tiles)
             # 모든 빈칸에 대해 2와 4가 나올 경우를 모두 계산하면 너무 복잡해지므로,

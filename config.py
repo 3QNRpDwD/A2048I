@@ -2,26 +2,31 @@
 import pygame
 
 # --- 화면 및 UI 설정 ---
-SCREEN_WIDTH = 1800
-SCREEN_HEIGHT = 850
+SCREEN_WIDTH = 1200 # 너비 확장
+SCREEN_HEIGHT = 1200 # 높이 확장
+PANEL_HEIGHT = 600
 PANEL_GAP = 20
+PANEL_V_GAP = 20 # 패널 수직 간격
 BACKGROUND_COLOR = (250, 248, 239)
+GRID_COLOR = (187, 173, 160) # 게임 보드 배경색
 FPS = 60
+TEXT_GAP = 170
+TEXT_V_GAP = 40 # 텍스트 수직 간격
 
 # --- 게임 보드 설정 ---
 BOARD_SIZE = 4
-TILE_SIZE = 120
-TILE_PADDING = 15
-BOARD_X_OFFSET = 50
-BOARD_Y_OFFSET = 150
+TILE_SIZE = 60
+TILE_PADDING = 5
+BOARD_X_OFFSET = 30
+BOARD_Y_OFFSET = 90
 
 # --- 폰트 설정 ---
 pygame.font.init()
-SCORE_FONT = pygame.font.Font(None, 48)
-TILE_FONT_SIZE = 55
-TILE_FONT = pygame.font.Font(None, TILE_FONT_SIZE)
-UI_FONT = pygame.font.Font(None, 36)
-UI_FONT_SMALL = pygame.font.Font(None, 28)
+SCORE_FONT = pygame.font.Font(None, 30)
+TILE_FONT = pygame.font.Font(None, 28)
+UI_FONT = pygame.font.Font(None, 26)
+ANALYSIS_FONT = pygame.font.Font(None, 28)
+ANALYSIS_FONT_SMALL = pygame.font.Font(None, 24) # 실시간 분석 패널 전용 폰트
 
 # --- 타일 색상 ---
 TILE_COLORS = {

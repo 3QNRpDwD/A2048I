@@ -69,7 +69,7 @@ class Game2048:
         if not self.get_available_moves():
             self.game_over = True
         
-        return board_changed
+        return board_changed, move_score
 
     def _move_left(self, board):
         """왼쪽으로 타일을 밀고 합치는 로직"""
