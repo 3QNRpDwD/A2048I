@@ -16,6 +16,7 @@ from ai.mcts_ai import MCTSAI
 from ai.hybrid_mcts_ai import HybridMCTSAI
 from ai.evo_expectimax_ai import EvoExpectimaxAI
 from ai.n_tuple_ai import NTupleAI
+from ai.reinforce_ai import ReinforceAI
 from ui.renderer import GameRenderer, BoardRenderer
 
 # --- 로깅 설정 ---
@@ -133,6 +134,7 @@ def main():
         "MCTS": MCTSAI(iterations=config.MCTS_ITERATIONS),
         "Hybrid MCTS": HybridMCTSAI(iterations=config.MCTS_ITERATIONS),
         "Online N-Tuple": NTupleAI(),
+        "REINFORCE": ReinforceAI(),
     }
     evo_ai_name = "Evo-Expectimax"
     evo_ai_lock = threading.Lock()
@@ -168,10 +170,8 @@ def main():
                 logger.info("종료 신호 수신 - 종료합니다.")
                 ga_process.terminate()
                 ga_process.join()
-                # NTupleAI 가중치 저장
                 for ai in ais.values():
-                    if isinstance(ai, NTupleAI):
-                        ai.save()
+                    if isinstance(ai, NTupleAI): ai.save()
                 pygame.quit()
                 sys.exit()
 
@@ -193,7 +193,8 @@ def main():
             if s == "PLAYING" and not g.win:
                 if g.game_over:
                     logger.info(f"[{name}] 게임 오버 - 리셋")
-                    if isinstance(ai, NTupleAI): ai.save() # 게임 오버 시 가중치 저장
+                    if isinstance(ai, NTupleAI): ai.save()
+                    if isinstance(ai, ReinforceAI): ai.post_move_update(0, g.game_over)
                     retry_counts[name] += 1
                     g.reset()
                     brs[name].set_board(g.board)
@@ -245,9 +246,10 @@ def main():
                 board_changed, move_score = g.move(move)
 
                 if board_changed:
-                    # N-Tuple AI 온라인 학습 로직
                     if isinstance(ai, NTupleAI):
                         ai.perform_update(move_score, g.board)
+                    if isinstance(ai, ReinforceAI):
+                        ai.post_move_update(move_score, g.game_over)
 
                     current_max_tile = int(np.max(g.board))
                     if current_max_tile > highest_tiles.get(name, 0):
@@ -258,6 +260,8 @@ def main():
                     turns[name] = turns.get(name, 0) + 1
                     states[name] = "ANIMATING"
                 else:
+                    if isinstance(ai, ReinforceAI):
+                        ai.post_move_update(0, g.game_over)
                     states[name] = "PLAYING"
 
             elif s == "ANIMATING":

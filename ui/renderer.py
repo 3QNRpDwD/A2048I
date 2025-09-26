@@ -123,6 +123,12 @@ class GameRenderer:
                     update_count = ai_instance.update_count
                     update_text = config.UI_FONT.render(f"Updates: {update_count}", True, (0, 0, 150))
                     self.screen.blit(update_text, (x, y + config.TEXT_V_GAP + 65))
+            elif "REINFORCE" in ai_name:
+                ai_instance = ais.get(ai_name)
+                if ai_instance:
+                    update_count = ai_instance.update_count
+                    update_text = config.UI_FONT.render(f"Updates: {update_count}", True, (150, 0, 0))
+                    self.screen.blit(update_text, (x, y + config.TEXT_V_GAP + 65))
             # --------------------------
 
             board_y = y + 120
