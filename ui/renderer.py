@@ -170,7 +170,7 @@ class GameRenderer:
         self.tree_font = pygame.font.Font(None, 22)
         self.preview_board_surface = pygame.Surface((200, 200))
 
-    def draw_main_ui(self, games, analyses, turn_counts, board_renderers, thinking_ai=None):
+    def draw_main_ui(self, games, analyses, turn_counts, board_renderers, retry_counts, highest_tiles, thinking_ai=None):
         self.screen.fill(config.BACKGROUND_COLOR)
         ai_names = list(games.keys())
         num_ais = len(ai_names)
@@ -185,16 +185,27 @@ class GameRenderer:
             board_renderer = board_renderers[ai_name]
             
             x = start_x + i * (panel_width + config.PANEL_GAP)
-            y = 100 # Constant y position
+            y = 10 # y-position adjusted for new fields
 
+            # AI Title
             title = config.UI_FONT.render(f"{i+1}. {ai_name}", True, (0,0,0))
             self.screen.blit(title, (x, y))
+
+            # Metrics
             score_text = config.SCORE_FONT.render(f"Score: {game.score}", True, (0,0,0))
             self.screen.blit(score_text, (x, y + 40))
+            
             turn_text = config.UI_FONT.render(f"Turn: {turn_counts[ai_name]}", True, (0,0,0))
             self.screen.blit(turn_text, (x + 250, y + 45))
 
-            board_y = y + 90
+            retry_text = config.UI_FONT.render(f"Retries: {retry_counts[ai_name]}", True, (0,0,0))
+            self.screen.blit(retry_text, (x, y + 80))
+
+            highest_tile_text = config.UI_FONT.render(f"Highest: {highest_tiles[ai_name]}", True, (0,0,0))
+            self.screen.blit(highest_tile_text, (x + 250, y + 80))
+
+            # Board
+            board_y = y + 120
             board_renderer.draw(self.screen, x, board_y)
             
             if ai_name == thinking_ai:
@@ -231,10 +242,10 @@ class GameRenderer:
 
     def draw_ai_analysis_panel(self, surface, ai_name, analysis_data, x_offset, y_offset):
         title_surface = config.UI_FONT.render(f"{ai_name} Analysis", True, (0,0,0))
-        surface.blit(title_surface, (x_offset, y_offset))
+        surface.blit(title_surface, (x_offset, y_offset + 40))
         if not analysis_data: return
         moves = {0: 'Up', 1: 'Down', 2: 'Left', 3: 'Right'}
-        y_pos = y_offset + 40
+        y_pos = y_offset + 75
         sorted_moves = sorted(analysis_data.items(), key=lambda item: item[1], reverse=True)
         for move, score in sorted_moves:
             move_name = moves.get(move, 'Unknown')

@@ -42,6 +42,8 @@ def main():
     analyses = {name: {} for name in ais.keys()}
     turns = {name: 0 for name in ais.keys()}
     last_trees = {name: None for name in ais.keys()}
+    retry_counts = {name: 0 for name in ais.keys()}
+    highest_tiles = {name: 0 for name in ais.keys()}
 
     # 스레드 안전한 큐와 스레드 참조
     ai_queues = {name: queue.Queue(maxsize=1) for name in ais.keys()}
@@ -77,6 +79,7 @@ def main():
             if s == "PLAYING":
                 if g.game_over:
                     logger.info("[%s] 게임 오버 - 리셋", name)
+                    retry_counts[name] += 1
                     g.reset()
                     br.set_board(g.board)
                     turns[name] = 0
@@ -171,6 +174,11 @@ def main():
                     board_changed = g.move(move)
 
                     if board_changed:
+                        # 최고 타일 업데이트
+                        current_max_tile = int(np.max(g.board))
+                        if current_max_tile > highest_tiles[name]:
+                            highest_tiles[name] = current_max_tile
+
                         analyses[name] = analysis
                         last_trees[name] = tree
                         logger.debug("[%s] 보드 변경 발생 - 애니메이션 시작", name)
@@ -197,7 +205,7 @@ def main():
         thinking_list = [n for n, st in states.items() if st == "THINKING"]
         thinking_param = thinking_list[0] if thinking_list else None
 
-        main_renderer.draw_main_ui(games, analyses, turns, brs, thinking_param)
+        main_renderer.draw_main_ui(games, analyses, turns, brs, retry_counts, highest_tiles, thinking_param)
         pygame.display.flip()
 
 if __name__ == '__main__':
