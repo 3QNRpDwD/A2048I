@@ -1,4 +1,3 @@
-
 import pygame
 
 # --- 화면 및 UI 설정 ---
@@ -9,7 +8,7 @@ PANEL_GAP = 20
 PANEL_V_GAP = 20 # 패널 수직 간격
 BACKGROUND_COLOR = (250, 248, 239)
 GRID_COLOR = (187, 173, 160) # 게임 보드 배경색
-FPS = 60
+FPS = 30
 TEXT_GAP = 170
 TEXT_V_GAP = 40 # 텍스트 수직 간격
 
@@ -21,12 +20,20 @@ BOARD_X_OFFSET = 30
 BOARD_Y_OFFSET = 90
 
 # --- 폰트 설정 ---
+# 폰트 변수들을 선언만 하고, 실제 로딩은 init_fonts() 함수에서 수행합니다.
+SCORE_FONT = None
+TILE_FONT = None
+UI_FONT = None
+ANALYSIS_FONT = None
+ANALYSIS_FONT_SMALL = None
+
+
 pygame.font.init()
 SCORE_FONT = pygame.font.Font(None, 30)
 TILE_FONT = pygame.font.Font(None, 28)
 UI_FONT = pygame.font.Font(None, 26)
 ANALYSIS_FONT = pygame.font.Font(None, 28)
-ANALYSIS_FONT_SMALL = pygame.font.Font(None, 24) # 실시간 분석 패널 전용 폰트
+ANALYSIS_FONT_SMALL = pygame.font.Font(None, 24)
 
 # --- 타일 색상 ---
 TILE_COLORS = {
@@ -63,7 +70,6 @@ TEXT_COLORS = {
 }
 
 # --- AI 설정 ---
-AI_MOVE_DELAY = 50  # ms, AI가 움직이는 간격
-ANIMATION_DURATION = 200 # ms, 타일 애니메이션 지속 시간
+AI_MOVE_DELAY = 10  # ms, AI가 움직이는 간격
 EXPECTIMAX_DEPTH = 3 # Expectimax 탐색 깊이
 MCTS_ITERATIONS = 100 # MCTS 시뮬레이션 횟수

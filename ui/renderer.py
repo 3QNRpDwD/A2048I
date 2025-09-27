@@ -34,7 +34,7 @@ class BoardRenderer:
     def set_board(self, board):
         self.tiles = [Tile(val, (r,c)) for (r,c), val in np.ndenumerate(board) if val != 0]
 
-    def start_animation(self, old_board, new_board, move_direction, duration_seconds):
+    def start_animation(self, new_board):
         self.is_animating = True
         self.set_board(new_board)
         self.is_animating = False
@@ -118,16 +118,14 @@ class GameRenderer:
                 self.screen.blit(fitness_text, (x + config.TEXT_GAP, y + config.TEXT_V_GAP + 65))
             # --- N-Tuple 학습 상태 표시 ---
             elif "N-Tuple" in ai_name:
-                ai_instance = ais.get(ai_name)
+                ai_instance = ais[ai_name]
                 if ai_instance:
-                    update_count = ai_instance.update_count
-                    update_text = config.UI_FONT.render(f"Updates: {update_count}", True, (0, 0, 150))
+                    update_text = config.UI_FONT.render(f"Updates: {ai_instance.update_count}", True, (0, 0, 150))
                     self.screen.blit(update_text, (x, y + config.TEXT_V_GAP + 65))
             elif "REINFORCE" in ai_name:
-                ai_instance = ais.get(ai_name)
+                ai_instance = ais[ai_name]
                 if ai_instance:
-                    update_count = ai_instance.update_count
-                    update_text = config.UI_FONT.render(f"Updates: {update_count}", True, (150, 0, 0))
+                    update_text = config.UI_FONT.render(f"Updates: {ai_instance.update_count}", True, (150, 0, 0))
                     self.screen.blit(update_text, (x, y + config.TEXT_V_GAP + 65))
             # --------------------------
 

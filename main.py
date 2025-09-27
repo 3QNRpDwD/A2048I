@@ -256,7 +256,7 @@ def main():
                         highest_tiles[name] = current_max_tile
                     analyses[name] = analysis
                     last_trees[name] = tree
-                    brs[name].start_animation(old_b, g.board, move, config.ANIMATION_DURATION / 1000.0)
+                    brs[name].start_animation(g.board)
                     turns[name] = turns.get(name, 0) + 1
                     states[name] = "ANIMATING"
                 else:
